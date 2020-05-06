@@ -1,0 +1,46 @@
+br.ufsc.covid.User{
+   drauzio[   email=drauzio@gmail.com   password='pbkdf2_sha256$150000$ioOpHXZiMAl6$Q0VIlLO9A9nNlIQH+4+BfCVFvQ54hn4GMWGLCwmhZSY=' firstName=Drauzio lastName='Varella' isActive=true isStaff=true isSuperuser=true dateJoined=now]
+}
+
+br.ufsc.covid.RiskFactor{
+   asthma			[ name=Asthma ]
+   cardiovascular	[ name=Cardiovascular ]
+   bronchitis		[ name=Bronchitis ]  
+}
+
+br.ufsc.covid.Symptom{
+   shortness:of:breath	[ name='Shortness of Breath' ]
+   fever				[ name=Fever ]
+}
+
+br.ufsc.covid.LogicalCondition { 
+	age:gt:12[  created=now  modified=now attribute='age' operator='gt' value=12 ]
+	age:lt:65[  created=now  modified=now attribute='age' operator='lt' value=65 ]
+	age:gt:18[ created=now  modified=now attribute='age' operator='gt' value=18 ]
+	
+} 
+br.ufsc.covid.Condition{
+	two:conditions [ created=now  modified=now logicals br.ufsc.covid.LogicalCondition {#age:gt:12 #age:lt:65}  ]
+	one:condition  [  created=now  modified=now logicals br.ufsc.covid.LogicalCondition {#age:gt:18}  ]
+}
+
+br.ufsc.covid.Rule{
+	rule:1[ name='Rule 1' created=now  modified=now message='Hello message' enabled=true any=true 
+			conditions br.ufsc.covid.Condition{ #two:conditions}  
+	]
+	rule:2[ name='Rule 2' created=now  modified=now message='Hello message' enabled=true any=true
+			conditions br.ufsc.covid.Condition{ #one:condition}  
+	]
+}
+
+
+br.ufsc.covid.Person{
+   	douglas	[ age=27 status=D beacon_id=douglas_beacon_id sex=M]
+  	pedro	[ age=72 status=D beacon_id=pedro_beacon_id sex=M]
+}
+
+br.ufsc.covid.Notification{
+    douglas:notification:1	[ created=now modified=now read=true, delivered=true person=#douglas rule=#rule:1]
+   	douglas:notification:2	[ created=now modified=now read=true, delivered=true person=#douglas rule=#rule:2] 
+}
+
